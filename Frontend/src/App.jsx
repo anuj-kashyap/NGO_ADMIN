@@ -1,0 +1,18 @@
+import { useState } from 'react'
+
+import './index.css'
+import Login from './Component/Login'
+
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <>
+      <div>
+        <Login/>
+      </div>
+    </>
+  )
+}
+
+export default App
