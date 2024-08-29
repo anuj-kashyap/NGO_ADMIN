@@ -6,6 +6,7 @@ import { mongoose } from "mongoose";
 import dotenv from "dotenv"
 import cors from "cors"
 import userRoute from "./Route/userRoute.js"
+import contactRoute from "./Route/contactRoute.js"
 dotenv.config()
 const app = express();
 
@@ -24,11 +25,12 @@ app.use(bodyParser.json());
 
 
 app.use(cors({
-    origin:["http://localhost:5173"],
+    origin:["http://localhost:5174"],
     credentials:true
 }))
 
 app.use("/api/user",userRoute)
+app.use("/api/form",contactRoute)
 
 const PORT = process.env.PORT||5000;
 

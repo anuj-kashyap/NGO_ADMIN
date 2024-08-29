@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import bg from '../assets/banner.jpg'
 import { motion } from 'framer-motion';
 import axios from 'axios';
-// import {Await,useNavigate} from "react-router-dom"
+import {Await,useNavigate} from "react-router-dom"
+import logo from "../assets/NgoLogo.png"
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
 const loginApi = async()=>{
     console.log(`${import.meta.env.VITE_BACKEND_URL}`)
@@ -50,7 +51,7 @@ const loginApi = async()=>{
                 transition={{ duration: 0.5 }}
             >
                 <div className='text bg-center mb-8'>
-                    <img src={""} alt="Ngo logo" className='mx-auto h-24 mb-4' />
+                    <img src={logo} alt="Ngo logo" className='mx-auto h-24 mb-4' />
                     <h2 className='text-3xl font-bold'>Admin Logo</h2>
                 </div>
 

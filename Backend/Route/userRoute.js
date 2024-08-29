@@ -1,8 +1,7 @@
 import express from "express";
 
 
-const 
-router = express.Router();
+const router = express.Router();
 
 import { getuser,loginCheck,loginUser,logout,registerUser } from "../Controller/userController.js";
 
