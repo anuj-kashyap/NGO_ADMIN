@@ -24,7 +24,7 @@ const Donation = () => {
 
   return (
     <div className="flex h-screen">
-      <div className=" bg-gray-100 dark:bg-gray-900">
+      <div className=" bg-gray-100 max-h-svh dark:bg-gray-900">
         <Sidebar />
       </div>
 

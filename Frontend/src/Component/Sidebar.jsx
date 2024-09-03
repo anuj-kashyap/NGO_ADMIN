@@ -15,7 +15,7 @@ const Sidebar = () => {
           </li>
           <li className="p-4 flex items-center hover:bg-gray-700 transition duration-200">
             <UserIcon className="w-5 h-5 mr-2" />
-            <a href="#">Users</a>
+            <Link to="/user">Users</Link>
           </li>
           <li className="p-4 flex items-center hover:bg-gray-700 transition duration-200">
             <ChartBarIcon className="w-5 h-5 mr-2" />
@@ -23,7 +23,7 @@ const Sidebar = () => {
           </li>
           <li className="p-4 flex items-center hover:bg-gray-700 transition duration-200">
             <CogIcon className="w-5 h-5 mr-2" />
-            <a href="#">Settings</a>
+            <Link to="/volunteer">Volunteer</Link>
           </li>
         </ul>
       </nav>

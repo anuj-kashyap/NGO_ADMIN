@@ -7,6 +7,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import userRoute from "./Route/userRoute.js"
 import contactRoute from "./Route/contactRoute.js"
+import volunteerRoute from "./Route/volunteerRoute.js"
 dotenv.config()
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(cors({
 
 app.use("/api/user",userRoute)
 app.use("/api/form",contactRoute)
+app.use("/api/volunteer",volunteerRoute)
 
 const PORT = process.env.PORT||5000;
 
