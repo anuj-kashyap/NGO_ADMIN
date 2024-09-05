@@ -1,31 +1,29 @@
-import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler"
+import asyncHandler from "express-async-handler";
 import User from "../model/userModel.js";
-import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+import bcrypt from "bcryptjs";
 
-const genToken = (id)=>{
+const generateToken = (id)=>{
     return jwt.sign({id},process.env.JWT_KEY,{expiresIn:"1d"});
 };
 
-
-
-const registerUser = asyncHandler(async(req,res)=>{
-    const {email, username, password} = req.body;
+const registerUser = asyncHandler(async (req,res)=>{
+    const { email, username, password } = req.body;
 
     if(!email || !username || !password){
         res.status(400);
-        throw new Error("Please enter all field")
+        throw new Error("Please fill all the fields")
     }
 
     if(password.length<6){
         res.status(400);
-        throw new Error("Password must contain atleast 6 character")
+        throw new Error("password must be contain at least 6 letter")
     }
 
     const userExist = await User.findOne({email});
     if(userExist){
         res.status(400);
-        throw new Error("User already exist")
+        throw new Error("User already exist");
     }
 
     const user = await User.create({
@@ -34,133 +32,152 @@ const registerUser = asyncHandler(async(req,res)=>{
         password
     });
 
-    const token = genToken(user._id);
+    const token = generateToken(user._id);
+
     res.cookie("token",token,{
         httpOnly:true,
-        expires:new Date(Date.now() + 1000 + 86400),
-        secure:false,
-        sameSite:"lax",
+        expires: new Date(Date.now() + 1000 + 86400),
+        secure:true,
+        sameSite:"none",
         path:"/"
     });
 
     if(user){
-        const {username, email} = user;
+        const {username , email} = user;
         res.status(201).json({
             username,
-            email
+            email,
         });
     }
     else{
         res.status(400)
-        throw new Error("Invalid user Data")
+        throw new Error("Invalid User Data")
     }
+
+
 });
 
-
-const loginUser = asyncHandler(async(req,res)=>{
-    const {email, password} = req.body;
-    if(!email || !password){
-        req.status(400)
+const loginUser = asyncHandler(async (req,res)=>{
+    const {email,password}= req.body;
+    if(!email||!password){
+        res.status(400);
         throw new Error("Please provide email and password");
     }
-
     const user = await User.findOne({email});
     if(!user){
-        res.status(400)
-        throw new Error("User not Found")
+        res.status(400);
+        throw new Error("user not found");
     }
 
     const passwordMatch = await bcrypt.compare(password,user.password);
-    const token = genToken(user._id);
+    const token = generateToken(user._id);
 
     res.cookie("token",token,{
         httpOnly:true,
         expires:new Date(Date.now() + 1000 + 86400),
-        secure:false,
-        sameSite:"lax",
+        secure:true,
+        sameSite:"none",
         path:"/"
     });
 
     if(user && passwordMatch){
-        const {username,email} = user;
+        const {username , email} = user;
         res.status(201).json({username,email})
     }else{
-        res.status(400)
-        throw new Error("Invalid email and password")
+        res.status(400);
+        throw new Error("Invalid email and password");
     }
 });
 
-
-const loginCheck = asyncHandler(async(req,res)=>{
+const loginCheck = asyncHandler(async (req,res)=>{
     const token = req.cookies.token;
     if(!token){
         return res.json(false);
     }
 
-    try{
-        const verify = jwt.verify(token.process.env.JWT_KEY);
+    try {
+        const verify = jwt.verify(token,process.env.JWT_KEY);
         if(verify){
             return res.json(true);
         }
-    } catch(error){
-        console.error("jwt verification failed",error.message);
+        
+    } catch (error) {
+        console.error("Jtw verification failed",error.message);
+        
     }
-
     return res.json(false);
+
 });
 
+const logout = (req, res) => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Set to true if using HTTPS
+            sameSite: "none",
+            path: "/"
+        });
+        res.status(200).json({ message: "Successfully Logged Out" });
+    } catch (error) {
+        console.error("Error during logout:", error);
+        res.status(500).json({ message: "Logout failed, please try again" });
+    }
+};
 
-const logout = (req,res)=>{
-    res.clearCookie("token");
-    res.status(200).json({message:"Successfully Logged out"})
-}
-
-
-const getuser = asyncHandler(async(req,res)=>{
+const getuser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if(user){
-        const {email,username} = user;
+        const {email, username} = user;
         res.status(200).json({
             email,
             username
         })
-    }else{
-        res.status(400)
-        throw new Error("user not found!")
-        console.log("User not found")
     }
-});
-
-
-const updateUser = asyncHandler(async(req,res)=>{
-    const id = req.user._id;
-    const {email,username} = req.body;
-
-
-    try{
-        await User.findbyIdAndUpdate(id, {email,username},{new:true,runValidator:true});
-        res.status(200).json({message:"User updated successfully"})
-    }catch(error){
+    else{
         res.status(400)
-        throw new Error("User not updated")
+        throw new Error("User Not Found!");
+        console.log("User not found!");
+    }
+
+})
+
+const updateUser = asyncHandler(async (req, res) => {
+    const id = req.user._id;
+    const {email, username} = req.body;
+
+    try {
+        await User.findByIdAndUpdate(id, {email, username}, {new: true, runValidators: true});
+        res.status(200).json({message: "User Updated Successfully"})
+    } catch (error) {
+        res.status(400)
+        throw new Error("User Not Updated");
     }
 })
 
-
-const updatePassword = asyncHandler(async(req,res)=>{
+const updatePassword = asyncHandler(async (req, res) => {
     const id = req.user._id;
-    const password = req.body;
+    const {password} = req.body;
 
-    try{
+    try {
         const salt = await bcrypt.genSalt(10);
         const hashpass = await bcrypt.hash(password,salt);
-        await User.findbyIdAndUpdate(id,{password:hashpass},{new:true,runValidator:true})
-        res.status(201).json({message:"Update successfully"})
-    } catch(error){
+        await User.findByIdAndUpdate(id, {password: hashpass}, {new: true, runValidators: true})
+        res.status(201).json({message: "Updated Successfully"})
+    } catch (error) {
         res.status(400)
         throw new Error("Unable to update")
     }
+   
 })
 
-export {registerUser,loginUser,loginCheck,logout,getuser,updateUser,updatePassword}
+// const userData = asyncHandler(async(req,res)=>{
+//     const {email,username,password} = req.body;
+//     if(!email || !username || !password){
+//         res.status(400)
+//         throw new Error("data is not present");
+//     }
+
+// })
+
+export {registerUser,loginUser,loginCheck,logout,getuser,updateUser,updatePassword};

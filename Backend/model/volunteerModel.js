@@ -23,7 +23,7 @@ const volunteerSchema = new mongoose.Schema({
         required: true,
     },
 
-    Status: {
+    status: {
         type: String,
         enum: ['Active', 'Inactive'],
         default: 'Active',

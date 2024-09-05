@@ -31,7 +31,7 @@ const Dashboard = () => {
         <Navbar toggleTheme={toggleTheme} />
         <main className="p-6 bg-gray-100 dark:bg-gray-800 flex-grow">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Cards for statistics */}
+            
             <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow duration-300 dark:bg-gray-900">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-white">Total Donations</h3>
               <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">$12,345</p>
@@ -45,7 +45,7 @@ const Dashboard = () => {
               <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">5</p>
             </div>
           </div>
-          {/* Chart for data visualization */}
+          
           <div className="mt-6 bg-white p-6 rounded-lg shadow dark:bg-gray-900">
             <h3 className="text-lg font-semibold text-gray-700 mb-4 dark:text-white">Donation Trends</h3>
             <ResponsiveContainer width="100%" height={300}>

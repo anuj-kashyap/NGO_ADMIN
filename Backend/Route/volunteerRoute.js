@@ -6,9 +6,9 @@ import upload from '../Middleware/upload.js';
 const router = express.Router();
 
 
-router.post('/register',registerVolunteer);
+router.post('/register',upload.single('image'),registerVolunteer);
 router.get('/',getVolunteerDetails);
-router.post('/add',upload.single('image'),createVolunteer);
+// router.post('/add',createVolunteer);
 
 
 export default router;

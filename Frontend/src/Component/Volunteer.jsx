@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Search, ArrowUpDown } from 'lucide-react';
+import Sidebar from './Sidebar'; 
 
 const Volunteer = () => {
   const [volunteers, setVolunteers] = useState([]);
@@ -13,10 +14,10 @@ const Volunteer = () => {
     const fetchVolunteers = async () => {
       try {
         setLoading(true);
-        // Replace with your actual API endpoint
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/form/getcontact`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/volunteer/`);
         setVolunteers(response.data);
         setLoading(false);
+        console.log(response.data); 
       } catch (err) {
         setError('Failed to fetch volunteers. Please try again later.');
         setLoading(false);
@@ -65,51 +66,52 @@ const Volunteer = () => {
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
 
   return (
-    <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold mb-6 text-indigo-700">Volunteer Dashboard</h1>
-      
-      {/* Search Bar */}
-      <div className="mb-6 relative">
-        <input
-          type="text"
-          placeholder="Search volunteers..."
-          className="w-full p-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          onChange={handleSearch}
-        />
-        <Search className="absolute left-3 top-3 text-gray-400" size={20} />
-      </div>
+    <div className="flex">
+      <Sidebar />
+      <div className="flex-1 container mx-auto p-6 bg-gray-900 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold mb-6 text-indigo-700">Volunteer Dashboard</h1>
 
-      {/* Volunteer Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {['name', 'email', 'phone', 'skills', 'availability'].map((key) => (
-                <th
-                  key={key}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                  onClick={() => requestSort(key)}
-                >
-                  <div className="flex items-center">
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                    <ArrowUpDown size={14} className="ml-1" />
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {sortedVolunteers.map((volunteer) => (
-              <tr key={volunteer.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{volunteer.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{volunteer.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{volunteer.phone}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{volunteer.skills}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{volunteer.availability}</td>
+        <div className="mb-6 relative">
+          <input
+            type="text"
+            placeholder="Search volunteers..."
+            className="w-full p-3 pl-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onChange={handleSearch}
+          />
+          <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+        </div>
+
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                {['name', 'email', 'phone', 'services', 'status'].map((key, index) => (
+                  <th
+                    key={key} 
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => requestSort(key)}
+                  >
+                    <div className="flex items-center">
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                      <ArrowUpDown size={14} className="ml-1" />
+                    </div>
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {sortedVolunteers.map((volunteer, index) => (
+                <tr key={volunteer.id || index}>
+                  <td className="px-6 py-4 whitespace-nowrap">{volunteer.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{volunteer.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{volunteer.phone}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{volunteer.services || 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{volunteer.status || 'N/A'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

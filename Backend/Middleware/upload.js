@@ -1,5 +1,6 @@
 import multer from 'multer';
 import path from 'path';
+import bodyParser from 'body-parser';
 
 
 const storage = multer.diskStorage({

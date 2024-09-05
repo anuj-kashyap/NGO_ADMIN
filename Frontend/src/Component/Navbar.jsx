@@ -3,7 +3,7 @@ import { BellIcon, SearchIcon, UserCircleIcon, SunIcon } from '@heroicons/react/
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Navbar = ({ toggleTheme }) => {
   const [user, setUser] = useState({
@@ -11,6 +11,8 @@ const Navbar = ({ toggleTheme }) => {
     email: '',
     image: '',
   });
+
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,6 +31,18 @@ const Navbar = ({ toggleTheme }) => {
 
     fetchUser();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/logout`, { withCredentials: true });
+      
+      setUser({ name: '', email: '', image: '' });
+      
+      navigate('/login');
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   return (
     <div className="flex justify-between items-center p-4 bg-white shadow dark:bg-gray-900">
@@ -82,7 +96,7 @@ const Navbar = ({ toggleTheme }) => {
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      onClick={() => {/* Add logout functionality */}}
+                      onClick={handleLogout} // Call the handleLogout function on click
                       className={`${
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                       } block w-full text-left px-4 py-2 text-sm`}

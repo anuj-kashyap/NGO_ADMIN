@@ -75,7 +75,7 @@ const User = () => {
               </thead>
               <tbody>
                 {selectedUsers.map((data, index) => (
-                  <tr key={index} className='border-b border-yellow-500'>
+                  <tr key={index} className=' text-white border-b border-yellow-500'>
                     <td className="py-3 px-4 text-center">{startIndex + index + 1}</td>
                     <td className="py-3 px-4">{data.name}</td>
                     <td className="py-3 px-4">{data.phone}</td>
