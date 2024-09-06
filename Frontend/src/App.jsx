@@ -15,7 +15,7 @@ function App() {
 
 
   useEffect(()=>{
-    axios.get(`${url}/api/user/loginchcek`,{withCredentials: true})
+    axios.get(`${url}/api/user/logincheck`,{withCredentials: true})
     .then(res=>{
       setAuth(res.data);
     }).catch(()=>{
@@ -28,7 +28,7 @@ function App() {
      <Router>
       <Routes>
         <Route path="/" element={auth ?<Navigate to ="/"/>:<Login/>} />
-        {/* <Route path="/login" element={<Login />} /> */}
+        <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/donation" element={<Donation />} />
         <Route path="/profile" element={<Profile />} />

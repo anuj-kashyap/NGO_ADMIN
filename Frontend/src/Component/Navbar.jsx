@@ -34,7 +34,7 @@ const Navbar = ({ toggleTheme }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/logout`, { withCredentials: true });
+      await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/logout`, { withCredentials: true });
       
       setUser({ name: '', email: '', image: '' });
       

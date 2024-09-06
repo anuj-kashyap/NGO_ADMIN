@@ -10,8 +10,8 @@ router.post('/register',registerUser);
 router.post('/login',loginUser);
 router.get('/logincheck',loginCheck);
 router.get('/logout',logout);
-router.get('/getuser',getuser);
+router.get('/getuser',protect,getuser);
 router.post('/resetpassword',protect,updatePassword);
 
 
-export default router;
+export default router;  

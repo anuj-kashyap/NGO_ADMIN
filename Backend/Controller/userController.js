@@ -109,20 +109,11 @@ const loginCheck = asyncHandler(async (req,res)=>{
 
 });
 
-const logout = (req, res) => {
-    try {
-        res.clearCookie("token", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Set to true if using HTTPS
-            sameSite: "none",
-            path: "/"
-        });
-        res.status(200).json({ message: "Successfully Logged Out" });
-    } catch (error) {
-        console.error("Error during logout:", error);
-        res.status(500).json({ message: "Logout failed, please try again" });
-    }
-};
+const logout =(req,res)=>{
+    res.clearCookie("token");
+    res.status(200).json({ message: "Successfully Logged Out" });
+}
+
 
 const getuser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
@@ -130,7 +121,7 @@ const getuser = asyncHandler(async (req, res) => {
     if(user){
         const {email, username} = user;
         res.status(200).json({
-            email,
+            email,  
             username
         })
     }
