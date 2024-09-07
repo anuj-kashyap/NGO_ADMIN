@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 
 
 app.use(cors({
-    origin:["http://localhost:5173"],
+    origin:["https://microfinanceadmin.markletechandmedia.com","https://microfinance.markletechandmedia.com"],
     credentials:true
 }))
 
